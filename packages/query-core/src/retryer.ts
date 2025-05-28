@@ -74,7 +74,7 @@ export function isCancelledError(value: any): value is CancelledError {
   return value instanceof CancelledError
 }
 
-export function createRetryer<TData = unknown, TError = DefaultError>(
+export function createRetryer<TData, TError>(
   config: RetryerConfig<TData, TError>,
 ): Retryer<TData> {
   let isRetryCancelled = false
