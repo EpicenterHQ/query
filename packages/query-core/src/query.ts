@@ -66,7 +66,7 @@ export interface FetchContext<
   TQueryKey extends QueryKey = QueryKey,
 > {
   fetchFn: () => unknown | Promise<unknown>
-  fetchOptions?: FetchOptions
+  fetchOptions?: FetchOptions<TQueryFnData>
   signal: AbortSignal
   options: QueryOptions<TQueryFnData, TError, TData, any>
   client: QueryClient
@@ -92,10 +92,10 @@ export interface FetchMeta {
   fetchMore?: { direction: FetchDirection }
 }
 
-export interface FetchOptions<TData = unknown> {
+export interface FetchOptions<TQueryFnData> {
   cancelRefetch?: boolean
   meta?: FetchMeta
-  initialPromise?: Promise<TData>
+  initialPromise?: Promise<TQueryFnData>
 }
 
 interface FailedAction<TError> {

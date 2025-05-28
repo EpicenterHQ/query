@@ -399,8 +399,8 @@ export const skipToken = Symbol()
 export type SkipToken = typeof skipToken
 
 export function ensureQueryFn<
-  TQueryFnData = unknown,
-  TQueryKey extends QueryKey = QueryKey,
+  TQueryFnData,
+  TQueryKey extends QueryKey,
 >(
   options: {
     queryFn?: QueryFunction<TQueryFnData, TQueryKey> | SkipToken
