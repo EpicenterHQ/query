@@ -21,7 +21,6 @@ export type UseQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 > = MaybeRef<
   {
@@ -29,7 +28,6 @@ export type UseQueryOptions<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey
     >]: Property extends 'enabled'
       ? MaybeRefOrGetter<
@@ -37,7 +35,6 @@ export type UseQueryOptions<
             TQueryFnData,
             TError,
             TData,
-            TQueryData,
             DeepUnwrapRef<TQueryKey>
           >[Property]
         >
@@ -46,7 +43,6 @@ export type UseQueryOptions<
             TQueryFnData,
             TError,
             TData,
-            TQueryData,
             DeepUnwrapRef<TQueryKey>
           >[Property]
         >
@@ -63,7 +59,7 @@ export type UndefinedInitialQueryOptions<
   TError = DefaultError,
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
-> = UseQueryOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey> & {
+> = UseQueryOptions<TQueryFnData, TError, TData, TQueryKey> & {
   initialData?:
     | undefined
     | InitialDataFunction<NonUndefinedGuard<TQueryFnData>>
@@ -75,7 +71,7 @@ export type DefinedInitialQueryOptions<
   TError = DefaultError,
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
-> = UseQueryOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey> & {
+> = UseQueryOptions<TQueryFnData, TError, TData, TQueryKey> & {
   initialData:
     | NonUndefinedGuard<TQueryFnData>
     | (() => NonUndefinedGuard<TQueryFnData>)
@@ -118,13 +114,7 @@ export function useQuery<
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 >(
-  options: UseQueryOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryFnData,
-    TQueryKey
-  >,
+  options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
   queryClient?: QueryClient,
 ): UseQueryReturnType<TData, TError>
 
@@ -134,13 +124,7 @@ export function useQuery<
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 >(
-  options: UseQueryOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryFnData,
-    TQueryKey
-  >,
+  options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
   queryClient?: QueryClient,
 ):
   | UseQueryReturnType<TData, TError>

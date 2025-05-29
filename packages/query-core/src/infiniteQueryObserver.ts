@@ -27,16 +27,9 @@ export class InfiniteQueryObserver<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = InfiniteData<TQueryFnData>,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = unknown,
-> extends QueryObserver<
-  TQueryFnData,
-  TError,
-  TData,
-  InfiniteData<TQueryData, TPageParam>,
-  TQueryKey
-> {
+> extends QueryObserver<TQueryFnData, TError,   InfiniteData<TData, TPageParam>, TQueryKey> {
   // Type override
   subscribe!: Subscribable<
     InfiniteQueryObserverListener<TData, TError>
@@ -44,25 +37,13 @@ export class InfiniteQueryObserver<
 
   // Type override
   getCurrentResult!: ReplaceReturnType<
-    QueryObserver<
-      TQueryFnData,
-      TError,
-      TData,
-      InfiniteData<TQueryData, TPageParam>,
-      TQueryKey
-    >['getCurrentResult'],
+    QueryObserver<TQueryFnData, TError, InfiniteData<TData, TPageParam>, TQueryKey>['getCurrentResult'],
     InfiniteQueryObserverResult<TData, TError>
   >
 
   // Type override
   protected fetch!: ReplaceReturnType<
-    QueryObserver<
-      TQueryFnData,
-      TError,
-      TData,
-      InfiniteData<TQueryData, TPageParam>,
-      TQueryKey
-    >['fetch'],
+    QueryObserver<TQueryFnData, TError, InfiniteData<TData, TPageParam>, TQueryKey>['fetch'],
     Promise<InfiniteQueryObserverResult<TData, TError>>
   >
 
@@ -72,7 +53,6 @@ export class InfiniteQueryObserver<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey,
       TPageParam
     >,
@@ -91,7 +71,6 @@ export class InfiniteQueryObserver<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey,
       TPageParam
     >,
@@ -107,7 +86,6 @@ export class InfiniteQueryObserver<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey,
       TPageParam
     >,
@@ -145,14 +123,13 @@ export class InfiniteQueryObserver<
     query: Query<
       TQueryFnData,
       TError,
-      InfiniteData<TQueryData, TPageParam>,
+      InfiniteData<TData, TPageParam>,
       TQueryKey
     >,
     options: InfiniteQueryObserverOptions<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey,
       TPageParam
     >,

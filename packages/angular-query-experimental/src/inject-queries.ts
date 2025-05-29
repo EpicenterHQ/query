@@ -36,7 +36,7 @@ type QueryObserverOptionsForCreateQueries<
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 > = OmitKeyof<
-  QueryObserverOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey>,
+  QueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
   'placeholderData'
 > & {
   placeholderData?: TQueryFnData | QueriesPlaceholderDataFunction<TQueryFnData>

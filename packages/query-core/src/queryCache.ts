@@ -48,24 +48,25 @@ interface NotifyEventQueryUpdated extends NotifyEvent {
 interface NotifyEventQueryObserverAdded extends NotifyEvent {
   type: 'observerAdded'
   query: Query<any, any, any, any>
-  observer: QueryObserver<any, any, any, any, any>
+  observer: QueryObserver<any, any, any, any>
 }
 
 interface NotifyEventQueryObserverRemoved extends NotifyEvent {
   type: 'observerRemoved'
   query: Query<any, any, any, any>
-  observer: QueryObserver<any, any, any, any, any>
+  observer: QueryObserver<any, any, any, any>
 }
 
 interface NotifyEventQueryObserverResultsUpdated extends NotifyEvent {
   type: 'observerResultsUpdated'
   query: Query<any, any, any, any>
+  observer: QueryObserver<any, any, any, any>
 }
 
 interface NotifyEventQueryObserverOptionsUpdated extends NotifyEvent {
   type: 'observerOptionsUpdated'
   query: Query<any, any, any, any>
-  observer: QueryObserver<any, any, any, any, any>
+  observer: QueryObserver<any, any, any, any>
 }
 
 export type QueryCacheNotifyEvent =

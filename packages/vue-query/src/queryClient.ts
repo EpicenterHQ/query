@@ -436,11 +436,10 @@ export class QueryClient extends QC {
     TQueryFnData = unknown,
     TError = DefaultError,
     TData = TQueryFnData,
-    TQueryData = TQueryFnData,
   >(
     queryKey: MaybeRefDeep<QueryKey>,
     options: MaybeRefDeep<
-      Omit<UseQueryOptions<TQueryFnData, TError, TData, TQueryData>, 'queryKey'>
+      Omit<UseQueryOptions<TQueryFnData, TError, TData>, 'queryKey'>
     >,
   ): void {
     super.setQueryDefaults(cloneDeepUnref(queryKey), cloneDeepUnref(options))

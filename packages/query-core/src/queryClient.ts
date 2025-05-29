@@ -552,7 +552,6 @@ export class QueryClient {
     TQueryFnData = unknown,
     TError = DefaultError,
     TData = TQueryFnData,
-    TQueryData = TQueryFnData,
     TQueryKey extends QueryKey = QueryKey,
     TPageParam = never,
   >(

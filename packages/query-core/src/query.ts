@@ -169,7 +169,7 @@ export class Query<
   #cache: QueryCache
   #client: QueryClient
   #retryer?: Retryer<TData>
-  observers: Array<QueryObserver<any, any, any, any, any>>
+  observers: Array<QueryObserver<any, any, any, any>>
   #defaultOptions?: QueryOptions<TQueryFnData, TError, TData, TQueryKey>
   #abortSignalConsumed: boolean
 
@@ -309,7 +309,7 @@ export class Query<
     this.#retryer?.continue()
   }
 
-  addObserver(observer: QueryObserver<any, any, any, any, any>): void {
+  addObserver(observer: QueryObserver<any, any, any, any>): void {
     if (!this.observers.includes(observer)) {
       this.observers.push(observer)
 
@@ -320,7 +320,7 @@ export class Query<
     }
   }
 
-  removeObserver(observer: QueryObserver<any, any, any, any, any>): void {
+  removeObserver(observer: QueryObserver<any, any, any, any>): void {
     if (this.observers.includes(observer)) {
       this.observers = this.observers.filter((x) => x !== observer)
 
@@ -678,7 +678,7 @@ function getDefaultState<
     : 0
 
   return {
-    data,
+    data: data as TData | undefined,
     dataUpdateCount: 0,
     dataUpdatedAt: hasData ? (initialDataUpdatedAt ?? Date.now()) : 0,
     error: null,

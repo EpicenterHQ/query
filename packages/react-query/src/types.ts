@@ -18,26 +18,13 @@ import type {
   SkipToken,
 } from '@tanstack/query-core'
 
-export type AnyUseBaseQueryOptions = UseBaseQueryOptions<
-  any,
-  any,
-  any,
-  any,
-  any
->
+export type AnyUseBaseQueryOptions = UseBaseQueryOptions<any, any, any, any>
 export interface UseBaseQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
-> extends QueryObserverOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryData,
-    TQueryKey
-  > {
+> extends QueryObserverOptions<TQueryFnData, TError, TData, TQueryKey> {
   /**
    * Set this to `false` to unsubscribe this observer from updates to the query cache.
    * Defaults to `true`.
@@ -52,7 +39,7 @@ export interface UseQueryOptions<
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 > extends OmitKeyof<
-    UseBaseQueryOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey>,
+    UseBaseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
     'suspense'
   > {}
 
@@ -82,14 +69,12 @@ export type AnyUseInfiniteQueryOptions = UseInfiniteQueryOptions<
   any,
   any,
   any,
-  any,
   any
 >
 export interface UseInfiniteQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = unknown,
 > extends OmitKeyof<
@@ -97,7 +82,6 @@ export interface UseInfiniteQueryOptions<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey,
       TPageParam
     >,
@@ -111,23 +95,15 @@ export interface UseInfiniteQueryOptions<
 }
 
 export type AnyUseSuspenseInfiniteQueryOptions =
-  UseSuspenseInfiniteQueryOptions<any, any, any, any, any, any>
+  UseSuspenseInfiniteQueryOptions<any, any, any, any, any>
 export interface UseSuspenseInfiniteQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = unknown,
 > extends OmitKeyof<
-    UseInfiniteQueryOptions<
-      TQueryFnData,
-      TError,
-      TData,
-      TQueryData,
-      TQueryKey,
-      TPageParam
-    >,
+    UseInfiniteQueryOptions<TQueryFnData, TError, TData, TQueryKey, TPageParam>,
     'queryFn' | 'enabled' | 'throwOnError' | 'placeholderData'
   > {
   queryFn?: Exclude<
@@ -135,7 +111,6 @@ export interface UseSuspenseInfiniteQueryOptions<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey,
       TPageParam
     >['queryFn'],

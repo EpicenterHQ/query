@@ -460,10 +460,7 @@ export function addToStart<T>(items: Array<T>, item: T, max = 0): Array<T> {
 export const skipToken = Symbol()
 export type SkipToken = typeof skipToken
 
-export function ensureQueryFn<
-  TQueryFnData,
-  TQueryKey extends QueryKey,
->(
+export function ensureQueryFn<TQueryFnData, TQueryKey extends QueryKey>(
   options: {
     queryFn?: QueryFunction<TQueryFnData, TQueryKey> | SkipToken
     queryHash?: string

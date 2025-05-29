@@ -28,16 +28,9 @@ export function useBaseQuery<
   TQueryFnData,
   TError,
   TData,
-  TQueryData,
   TQueryKey extends QueryKey,
 >(
-  options: UseBaseQueryOptions<
-    TQueryFnData,
-    TError,
-    TData,
-    TQueryData,
-    TQueryKey
-  >,
+  options: UseBaseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
   Observer: typeof QueryObserver,
   queryClient?: QueryClient,
 ): QueryObserverResult<TData, TError> {
@@ -83,7 +76,7 @@ export function useBaseQuery<
 
   const [observer] = React.useState(
     () =>
-      new Observer<TQueryFnData, TError, TData, TQueryData, TQueryKey>(
+      new Observer<TQueryFnData, TError, TData, TQueryKey>(
         client,
         defaultedOptions,
       ),

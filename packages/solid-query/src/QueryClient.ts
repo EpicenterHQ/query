@@ -13,7 +13,6 @@ export interface QueryObserverOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = never,
 > extends OmitKeyof<
@@ -21,7 +20,6 @@ export interface QueryObserverOptions<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey,
       TPageParam
     >,
@@ -43,7 +41,6 @@ export interface InfiniteQueryObserverOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
   TPageParam = unknown,
 > extends OmitKeyof<
@@ -51,7 +48,6 @@ export interface InfiniteQueryObserverOptions<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey,
       TPageParam
     >,

@@ -18,7 +18,6 @@ import type { PendingThenable, Thenable } from './thenable'
 import type {
   DefaultError,
   DefaultedQueryObserverOptions,
-  PlaceholderDataFunction,
   QueryKey,
   QueryObserverBaseResult,
   QueryObserverOptions,
@@ -39,28 +38,26 @@ export class QueryObserver<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 > extends Subscribable<QueryObserverListener<TData, TError>> {
   #client: QueryClient
-  #currentQuery: Query<TQueryFnData, TError, TQueryData, TQueryKey> = undefined!
-  #currentQueryInitialState: QueryState<TQueryData, TError> = undefined!
+  #currentQuery: Query<TQueryFnData, TError, TData, TQueryKey> = undefined!
+  #currentQueryInitialState: QueryState<TData, TError> = undefined!
   #currentResult: QueryObserverResult<TData, TError> = undefined!
-  #currentResultState?: QueryState<TQueryData, TError>
+  #currentResultState?: QueryState<TData, TError>
   #currentResultOptions?: QueryObserverOptions<
     TQueryFnData,
     TError,
     TData,
-    TQueryData,
     TQueryKey
   >
   #currentThenable: Thenable<TData>
   #selectError: TError | null
-  #selectFn?: (data: TQueryData) => TData
+  #selectFn?: (data: TQueryFnData) => TData
   #selectResult?: TData
   // This property keeps track of the last query with defined data.
   // It will be used to pass the previous data and query to the placeholder function between renders.
-  #lastQueryWithDefinedData?: Query<TQueryFnData, TError, TQueryData, TQueryKey>
+  #lastQueryWithDefinedData?: Query<TQueryFnData, TError, TData, TQueryKey>
   #staleTimeoutId?: ReturnType<typeof setTimeout>
   #refetchIntervalId?: ReturnType<typeof setInterval>
   #currentRefetchInterval?: number | false
@@ -72,7 +69,6 @@ export class QueryObserver<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey
     >,
   ) {
@@ -139,13 +135,7 @@ export class QueryObserver<
   }
 
   setOptions(
-    options: QueryObserverOptions<
-      TQueryFnData,
-      TError,
-      TData,
-      TQueryData,
-      TQueryKey
-    >,
+    options: QueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
   ): void {
     const prevOptions = this.options
     const prevQuery = this.#currentQuery
@@ -229,7 +219,6 @@ export class QueryObserver<
       TQueryFnData,
       TError,
       TData,
-      TQueryData,
       TQueryKey
     >,
   ): QueryObserverResult<TData, TError> {
@@ -282,7 +271,7 @@ export class QueryObserver<
     this.#trackedProps.add(key)
   }
 
-  getCurrentQuery(): Query<TQueryFnData, TError, TQueryData, TQueryKey> {
+  getCurrentQuery(): Query<TQueryFnData, TError, TData, TQueryKey> {
     return this.#currentQuery
   }
 
@@ -295,13 +284,7 @@ export class QueryObserver<
   }
 
   fetchOptimistic(
-    options: QueryObserverOptions<
-      TQueryFnData,
-      TError,
-      TData,
-      TQueryData,
-      TQueryKey
-    >,
+    options: QueryObserverOptions<TQueryFnData, TError, TData, TQueryKey>,
   ): Promise<QueryObserverResult<TData, TError>> {
     const defaultedOptions = this.#client.defaultQueryOptions(options)
 
@@ -445,7 +428,7 @@ export class QueryObserver<
     const { state } = query
     let newState = { ...state }
     let isPlaceholderData = false
-    let data: TData | undefined
+    let data: TData | TQueryFnData | undefined
 
     // Optimistically set result in fetching state if needed
     if (options._optimisticResults) {
@@ -479,7 +462,7 @@ export class QueryObserver<
       data === undefined &&
       status === 'pending'
     ) {
-      let placeholderData: TData
+      let placeholderData: TQueryFnData | TData | undefined
 
       // Memoize placeholder data
       if (
@@ -501,11 +484,7 @@ export class QueryObserver<
 
       if (placeholderData !== undefined) {
         status = 'success'
-        data = replaceData(
-          prevResult?.data,
-          placeholderData as unknown,
-          options,
-        ) as TData
+        data = replaceData(prevResult?.data, placeholderData as TData, options)
         isPlaceholderData = true
       }
     }
@@ -523,7 +502,7 @@ export class QueryObserver<
       } else {
         try {
           this.#selectFn = options.select
-          data = options.select(data as TQueryData)
+          data = options.select(data as TQueryFnData)
           data = replaceData(prevResult?.data, data, options)
           this.#selectResult = data
           this.#selectError = null
@@ -725,6 +704,7 @@ export class QueryObserver<
       this.#client.getQueryCache().notify({
         query: this.#currentQuery,
         type: 'observerResultsUpdated',
+        observer: this,
       })
     })
   }
@@ -743,7 +723,7 @@ function shouldLoadOnMount(
 
 function shouldFetchOnMount(
   query: Query<any, any, any, any>,
-  options: QueryObserverOptions<any, any, any, any, any>,
+  options: QueryObserverOptions<any, any, any, any>,
 ): boolean {
   return (
     shouldLoadOnMount(query, options) ||
@@ -754,7 +734,7 @@ function shouldFetchOnMount(
 
 function shouldFetchOn(
   query: Query<any, any, any, any>,
-  options: QueryObserverOptions<any, any, any, any, any>,
+  options: QueryObserverOptions<any, any, any, any>,
   field: (typeof options)['refetchOnMount'] &
     (typeof options)['refetchOnWindowFocus'] &
     (typeof options)['refetchOnReconnect'],
@@ -770,8 +750,8 @@ function shouldFetchOn(
 function shouldFetchOptionally(
   query: Query<any, any, any, any>,
   prevQuery: Query<any, any, any, any>,
-  options: QueryObserverOptions<any, any, any, any, any>,
-  prevOptions: QueryObserverOptions<any, any, any, any, any>,
+  options: QueryObserverOptions<any, any, any, any>,
+  prevOptions: QueryObserverOptions<any, any, any, any>,
 ): boolean {
   return (
     (query !== prevQuery ||
@@ -783,7 +763,7 @@ function shouldFetchOptionally(
 
 function isStale(
   query: Query<any, any, any, any>,
-  options: QueryObserverOptions<any, any, any, any, any>,
+  options: QueryObserverOptions<any, any, any, any>,
 ): boolean {
   return (
     resolveValueOrFunction(options.enabled, query) !== false &&
@@ -797,10 +777,9 @@ function shouldAssignObserverCurrentProperties<
   TQueryFnData = unknown,
   TError = unknown,
   TData = TQueryFnData,
-  TQueryData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 >(
-  observer: QueryObserver<TQueryFnData, TError, TData, TQueryData, TQueryKey>,
+  observer: QueryObserver<TQueryFnData, TError, TData, TQueryKey>,
   optimisticResult: QueryObserverResult<TData, TError>,
 ) {
   // if the newly created result isn't what the observer is holding as current,
