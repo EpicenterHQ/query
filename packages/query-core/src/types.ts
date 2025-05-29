@@ -162,8 +162,6 @@ export type QueryFunctionContext<
 
 export type InitialDataFunction<T> = () => T | undefined
 
-type NonFunctionGuard<T> = T extends Function ? never : T
-
 export type PlaceholderDataFunction<
   TQueryFnData = unknown,
   TError = DefaultError,
@@ -420,13 +418,8 @@ export interface QueryObserverOptions<
    * If set, this value will be used as the placeholder data for this particular query observer while the query is still in the `loading` data and no initialData has been provided.
    */
   placeholderData?:
-    | NonFunctionGuard<TQueryData>
-    | PlaceholderDataFunction<
-        NonFunctionGuard<TQueryData>,
-        TError,
-        NonFunctionGuard<TQueryData>,
-        TQueryKey
-      >
+    | TQueryData
+    | PlaceholderDataFunction<TQueryData, TError, TQueryData, TQueryKey>
 
   _optimisticResults?: 'optimistic' | 'isRestoring'
 
