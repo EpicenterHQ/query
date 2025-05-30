@@ -147,7 +147,7 @@ export class QueryClient {
     options: EnsureQueryDataOptions<TQueryFnData, TError, TData, TQueryKey>,
   ): Promise<TData> {
     const defaultedOptions = this.defaultQueryOptions(options)
-    const query = this.#queryCache.build(this, defaultedOptions)
+    const query = this.#queryCache.ensure(this, defaultedOptions)
     const cachedData = query.state.data
 
     if (cachedData === undefined) {
@@ -207,7 +207,7 @@ export class QueryClient {
     }
 
     return this.#queryCache
-      .build(this, defaultedOptions)
+      .ensure(this, defaultedOptions)
       .setData(data, { ...options, manual: true })
   }
 
@@ -363,7 +363,7 @@ export class QueryClient {
       defaultedOptions.retry = false
     }
 
-    const query = this.#queryCache.build(this, defaultedOptions)
+    const query = this.#queryCache.ensure(this, defaultedOptions)
 
     return query.isStaleByTime(
       resolveValueOrFunction(defaultedOptions.staleTime, query),
