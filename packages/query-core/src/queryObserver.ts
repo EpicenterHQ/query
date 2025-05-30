@@ -687,7 +687,9 @@ export class QueryObserver<
   }
 
   #updateQuery(): void {
-    const query = this.#client.getQueryCache().ensure(this.#client, this.options)
+    const query = this.#client
+      .getQueryCache()
+      .ensure(this.#client, this.options)
 
     if (query === this.#currentQuery) {
       return
