@@ -1,0 +1,30 @@
+name: Publish Any Commit on Production Branch
+on:
+  push:
+    branches:
+      - production
+  pull_request:
+    branches:
+      - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm nx run-many --target=build --projects=@tanstack/query-core,@tanstack/svelte-query
+
+      - run: pnpm dlx pkg-pr-new publish './packages/query-core' './packages/svelte-query'
