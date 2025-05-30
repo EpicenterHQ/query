@@ -18,20 +18,17 @@ import type { PendingThenable, Thenable } from './thenable'
 import type {
   DefaultError,
   DefaultedQueryObserverOptions,
-  PlaceholderDataFunction,
   QueryKey,
   QueryObserverBaseResult,
   QueryObserverOptions,
   QueryObserverResult,
-  RefetchOptions,
+  RefetchOptions
 } from './types'
 
 type QueryObserverListener<TData, TError> = (
   result: QueryObserverResult<TData, TError>,
 ) => void
 
-interface ObserverFetchOptions<TQueryFnData>
-  extends FetchOptions<TQueryFnData> {
 interface ObserverFetchOptions<TQueryFnData>
   extends FetchOptions<TQueryFnData> {
   throwOnError?: boolean
@@ -498,7 +495,7 @@ export class QueryObserver<
           options.placeholderData,
           this.#lastQueryWithDefinedData?.state.data,
           this.#lastQueryWithDefinedData as any,
-        )
+        ) as TData
       }
 
       if (placeholderData !== undefined) {
