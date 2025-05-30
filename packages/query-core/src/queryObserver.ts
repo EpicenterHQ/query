@@ -22,15 +22,15 @@ import type {
   QueryObserverBaseResult,
   QueryObserverOptions,
   QueryObserverResult,
-  RefetchOptions
+  QueryOptions,
+  RefetchOptions,
 } from './types'
 
 type QueryObserverListener<TData, TError> = (
   result: QueryObserverResult<TData, TError>,
 ) => void
 
-interface ObserverFetchOptions<TQueryFnData>
-  extends FetchOptions<TQueryFnData> {
+interface ObserverFetchOptions extends FetchOptions {
   throwOnError?: boolean
 }
 
@@ -312,7 +312,7 @@ export class QueryObserver<
   }
 
   protected fetch(
-    fetchOptions: ObserverFetchOptions<TQueryFnData>,
+    fetchOptions: ObserverFetchOptions,
   ): Promise<QueryObserverResult<TData, TError>> {
     return this.#executeFetch({
       ...fetchOptions,
@@ -324,14 +324,14 @@ export class QueryObserver<
   }
 
   #executeFetch(
-    fetchOptions?: Omit<ObserverFetchOptions<TQueryFnData>, 'initialPromise'>,
+    fetchOptions?: Omit<ObserverFetchOptions, 'initialPromise'>,
   ): Promise<TQueryData | undefined> {
     // Make sure we reference the latest query as the current one might have been removed
     this.#updateQuery()
 
     // Fetch
     let promise: Promise<TQueryData | undefined> = this.#currentQuery.fetch(
-      this.options,
+      this.options as QueryOptions<TQueryFnData, TError, TQueryData, TQueryKey>,
       fetchOptions,
     )
 
@@ -478,7 +478,7 @@ export class QueryObserver<
       data === undefined &&
       status === 'pending'
     ) {
-      let placeholderData: TData
+      let placeholderData
 
       // Memoize placeholder data
       if (
@@ -522,7 +522,7 @@ export class QueryObserver<
       } else {
         try {
           this.#selectFn = options.select
-          data = options.select(data as TQueryData)
+          data = options.select(data as any)
           data = replaceData(prevResult?.data, data, options)
           this.#selectResult = data
           this.#selectError = null
@@ -695,12 +695,14 @@ export class QueryObserver<
       return
     }
 
-    const prevQuery = this.#currentQuery
+    const prevQuery = this.#currentQuery as
+      | Query<TQueryFnData, TError, TQueryData, TQueryKey>
+      | undefined
     this.#currentQuery = query
     this.#currentQueryInitialState = query.state
 
     if (this.hasListeners()) {
-      prevQuery.removeObserver(this)
+      prevQuery?.removeObserver(this)
       query.addObserver(this)
     }
   }
