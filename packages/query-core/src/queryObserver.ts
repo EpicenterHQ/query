@@ -32,6 +32,8 @@ type QueryObserverListener<TData, TError> = (
 
 interface ObserverFetchOptions<TQueryFnData>
   extends FetchOptions<TQueryFnData> {
+interface ObserverFetchOptions<TQueryFnData>
+  extends FetchOptions<TQueryFnData> {
   throwOnError?: boolean
 }
 
@@ -759,7 +761,7 @@ function shouldFetchOn(
     (typeof options)['refetchOnWindowFocus'] &
     (typeof options)['refetchOnReconnect'],
 ) {
-  if (resolveValueOrFunction(options.enabled, query) !== false) {
+  if (resolveValueOrFunction(options.enabled, query) !== false && resolveValueOrFunction(options.staleTime, query) !== 'static') {
     const value = resolveValueOrFunction(field, query)
 
     return value === 'always' || (value !== false && isStale(query, options))
