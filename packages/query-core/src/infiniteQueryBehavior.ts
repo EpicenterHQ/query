@@ -65,12 +65,11 @@ export function infiniteQueryBehavior<TQueryFnData, TError, TData, TPageParam>(
               direction: previous ? 'backward' : 'forward',
               meta: context.options.meta,
             }
+            addSignalProperty(queryFnContext)
             return queryFnContext as QueryFunctionContext<QueryKey, unknown>
           }
 
           const queryFnContext = createQueryFnContext()
-
-          addSignalProperty(queryFnContext)
 
           const page = await queryFn(queryFnContext)
 

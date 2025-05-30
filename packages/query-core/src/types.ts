@@ -167,7 +167,7 @@ export type QueryFunctionContext<
 
 export type InitialDataFunction<T> = () => T | undefined
 
-export type PlaceholderDataFunction<
+type PlaceholderDataFunction<
   TQueryFnData = unknown,
   TError = DefaultError,
   TQueryData = TQueryFnData,

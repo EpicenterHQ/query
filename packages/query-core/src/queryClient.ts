@@ -146,7 +146,7 @@ export class QueryClient {
     options: EnsureQueryDataOptions<TQueryFnData, TError, TData, TQueryKey>,
   ): Promise<TData> {
     const defaultedOptions = this.defaultQueryOptions(options)
-    const query = this.#queryCache.build(this, defaultedOptions)
+    const query = this.#queryCache.ensure(this, defaultedOptions)
     const cachedData = query.state.data
 
     if (cachedData === undefined) {
@@ -195,19 +195,18 @@ export class QueryClient {
       QueryKey
     >({ queryKey })
 
-    const query = this.#queryCache.get<TInferredQueryFnData>(
-      defaultedOptions.queryHash,
+    const query = this.#queryCache.ensure<TInferredQueryFnData>(
+      this,
+      defaultedOptions,
     )
-    const prevData = query?.state.data
+    const prevData = query.state.data
     const data = functionalUpdate(updater, prevData)
 
     if (data === undefined) {
       return undefined
     }
 
-    return this.#queryCache
-      .build(this, defaultedOptions)
-      .setData(data, { ...options, manual: true })
+    return query.setData(data, { ...options, manual: true })
   }
 
   setQueriesData<
@@ -362,7 +361,7 @@ export class QueryClient {
       defaultedOptions.retry = false
     }
 
-    const query = this.#queryCache.build(this, defaultedOptions)
+    const query = this.#queryCache.ensure(this, defaultedOptions)
 
     return query.isStaleByTime(
       resolveValueOrFunction(defaultedOptions.staleTime, query),
