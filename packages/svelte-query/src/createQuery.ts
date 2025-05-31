@@ -1,6 +1,14 @@
-import { QueryObserver } from '@tanstack/query-core'
+import { isErr } from '@epicenterhq/result'
+import { QueryObserver, skipToken } from '@tanstack/query-core'
 import { createBaseQuery } from './createBaseQuery.svelte.js'
-import type { DefaultError, QueryClient, QueryKey } from '@tanstack/query-core'
+import type { Result } from '@epicenterhq/result'
+import type {
+  DefaultError,
+  QueryClient,
+  QueryFunction,
+  QueryKey,
+  SkipToken,
+} from '@tanstack/query-core'
 import type {
   Accessor,
   CreateQueryOptions,
@@ -51,4 +59,38 @@ export function createQuery(
   queryClient?: Accessor<QueryClient>,
 ) {
   return createBaseQuery(options, QueryObserver, queryClient)
+}
+
+export function createResultQuery<
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey,
+>(
+  options: Accessor<
+    Omit<
+      CreateQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
+      'queryFn'
+    > & {
+      queryFn?:
+        | QueryFunction<Result<TQueryFnData, TError>, TQueryKey>
+        | SkipToken
+    }
+  >,
+  queryClient?: Accessor<QueryClient>,
+) {
+  return createQuery<TQueryFnData, TError, TData, TQueryKey>(() => {
+    const { queryFn, ...optionValues } = options()
+    if (queryFn === undefined || queryFn === skipToken) {
+      return { ...optionValues, queryFn }
+    }
+    return {
+      ...optionValues,
+      queryFn: async (...args) => {
+        const result = await queryFn(...args)
+        if (isErr(result)) throw result.error
+        return result.data
+      },
+    }
+  }, queryClient)
 }
