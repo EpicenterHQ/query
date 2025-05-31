@@ -1,7 +1,7 @@
 import { QueriesObserver } from '@tanstack/query-core'
 import { untrack } from 'svelte'
-import { useIsRestoring } from './useIsRestoring.js'
 import { createRawRef } from './containers.svelte.js'
+import { useIsRestoring } from './useIsRestoring.js'
 import { useQueryClient } from './useQueryClient.js'
 import type {
   Accessor,
