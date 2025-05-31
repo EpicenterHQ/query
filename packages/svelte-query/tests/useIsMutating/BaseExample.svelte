@@ -7,17 +7,17 @@
   const isMutating = useIsMutating(undefined, queryClient)
 
   const mutation = createMutation(
-    {
+    () => ({
       mutationKey: ['mutation-1'],
       mutationFn: async () => {
         await sleep(5)
         return 'data'
       },
-    },
-    queryClient,
+    }),
+    () => queryClient,
   )
 </script>
 
-<button on:click={() => $mutation.mutate()}>Trigger</button>
+<button onclick={() => mutation.mutate()}>Trigger</button>
 
-<div>isMutating: {$isMutating}</div>
+<div>isMutating: {isMutating.current}</div>

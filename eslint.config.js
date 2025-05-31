@@ -41,6 +41,7 @@ export default [
       '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/require-await': 'error',
       'no-case-declarations': 'off',
+      'prefer-const': 'off',
     },
   },
   {

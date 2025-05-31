@@ -103,6 +103,6 @@ describe('createMutation', () => {
     await waitFor(() => rendered.getByText('Status: success'))
     await waitFor(() => rendered.getByText('Data: 2'))
     await waitFor(() => rendered.getByText('Failure Count: 0'))
-    await waitFor(() => rendered.getByText('Failure Reason: null'))
+    await waitFor(() => rendered.getByText('Failure Reason: undefined'))
   })
 })
