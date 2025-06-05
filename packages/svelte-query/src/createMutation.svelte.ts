@@ -9,7 +9,7 @@ import type {
   CreateMutationOptions,
   CreateMutationResult,
 } from './types.js'
-import type { Result } from '@epicenterhq/result'
+import type { ExtractErrFromResult, ExtractOkFromResult, Result } from '@epicenterhq/result'
 
 import type {
   DefaultError,
@@ -79,22 +79,21 @@ export function createMutation<
 function noop() {}
 
 export function createResultMutation<
-  TData = unknown,
-  TError = DefaultError,
+  TResult extends Result<unknown, unknown> = Result<unknown, DefaultError>,
   TVariables = void,
   TContext = unknown,
 >(
   options: Accessor<
     Omit<
-      CreateMutationOptions<TData, TError, TVariables, TContext>,
+      CreateMutationOptions<ExtractOkFromResult<TResult>, ExtractErrFromResult<TResult>, TVariables, TContext>,
       'mutationFn'
     > & {
-      mutationFn?: MutationFunction<Result<TData, TError>, TVariables>
+      mutationFn?: MutationFunction<TResult, TVariables>
     }
   >,
   queryClient?: Accessor<QueryClient>,
-): CreateMutationResult<TData, TError, TVariables, TContext> {
-  return createMutation<TData, TError, TVariables, TContext>(() => {
+): CreateMutationResult<ExtractOkFromResult<TResult>, ExtractErrFromResult<TResult>, TVariables, TContext> {
+  return createMutation<ExtractOkFromResult<TResult>, ExtractErrFromResult<TResult>, TVariables, TContext>(() => {
     const { mutationFn, ...optionValues } = options()
     if (mutationFn === undefined) {
       return { ...optionValues, mutationFn }
@@ -103,8 +102,8 @@ export function createResultMutation<
       ...optionValues,
       mutationFn: async (variables: TVariables) => {
         const result = await mutationFn(variables)
-        if (isErr(result)) throw result.error
-        return result.data
+        if (isErr(result)) throw result.error as ExtractErrFromResult<TResult>
+        return result.data as ExtractOkFromResult<TResult>
       },
     }
   }, queryClient)
