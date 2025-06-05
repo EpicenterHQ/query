@@ -1,24 +1,24 @@
-import { isErr } from '@epicenterhq/result';
-import { QueryObserver, skipToken } from '@tanstack/query-core';
-import { createBaseQuery } from './createBaseQuery.svelte.js';
+import { isErr } from '@epicenterhq/result'
+import { QueryObserver, skipToken } from '@tanstack/query-core'
+import { createBaseQuery } from './createBaseQuery.svelte.js'
+import type { Result } from '@epicenterhq/result'
 import type {
   DefaultError,
   QueryClient,
   QueryFunction,
   QueryKey,
   SkipToken,
-} from '@tanstack/query-core';
-import type { ExtractErrFromResult, ExtractOkFromResult, Result } from '@epicenterhq/result';
-import type {
-  DefinedInitialDataOptions,
-  UndefinedInitialDataOptions,
-} from './queryOptions.js';
+} from '@tanstack/query-core'
 import type {
   Accessor,
   CreateQueryOptions,
   CreateQueryResult,
   DefinedCreateQueryResult,
-} from './types.js';
+} from './types.js'
+import type {
+  DefinedInitialDataOptions,
+  UndefinedInitialDataOptions,
+} from './queryOptions.js'
 
 export function createQuery<
   TQueryFnData = unknown,
@@ -62,23 +62,24 @@ export function createQuery(
 }
 
 export function createResultQuery<
-  TResult extends Result<unknown, unknown> = Result<unknown, DefaultError>,
-  TData = ExtractOkFromResult<TResult>,
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey,
 >(
   options: Accessor<
     Omit<
-      CreateQueryOptions<ExtractOkFromResult<TResult>, ExtractErrFromResult<TResult>, TData, TQueryKey>,
+      CreateQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
       'queryFn'
     > & {
       queryFn?:
-        | QueryFunction<TResult, TQueryKey>
+        | QueryFunction<Result<TQueryFnData, TError>, TQueryKey>
         | SkipToken
     }
   >,
   queryClient?: Accessor<QueryClient>,
 ) {
-  return createQuery<ExtractOkFromResult<TResult>, ExtractErrFromResult<TResult>, TData, TQueryKey>(() => {
+  return createQuery<TQueryFnData, TError, TData, TQueryKey>(() => {
     const { queryFn, ...optionValues } = options()
     if (queryFn === undefined || queryFn === skipToken) {
       return { ...optionValues, queryFn }
@@ -87,8 +88,8 @@ export function createResultQuery<
       ...optionValues,
       queryFn: async (...args) => {
         const result = await queryFn(...args)
-        if (isErr(result)) throw result.error as ExtractErrFromResult<TResult>
-        return result.data as ExtractOkFromResult<TResult>
+        if (isErr(result)) throw result.error
+        return result.data
       },
     }
   }, queryClient)
