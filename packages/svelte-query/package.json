@@ -50,7 +50,7 @@
     "!src/__tests__"
   ],
   "dependencies": {
-    "@epicenterhq/result": "^0.11.0",
+    "@epicenterhq/result": "^0.13.0",
     "@tanstack/query-core": "workspace:*"
   },
   "devDependencies": {
