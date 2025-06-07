@@ -2728,8 +2728,8 @@ importers:
   packages/svelte-query:
     dependencies:
       '@epicenterhq/result':
-        specifier: ^0.13.0
-        version: 0.13.0
+        specifier: ^0.13.1
+        version: 0.13.1
       '@tanstack/query-core':
         specifier: workspace:*
         version: link:../query-core
@@ -4637,8 +4637,8 @@ packages:
   '@emotion/weak-memoize@0.4.0':
     resolution: {integrity: sha512-snKqtPW01tN0ui7yu9rGv69aJXr/a/Ywvl11sUjNtEcRc+ng/mQriFL0wLXMef74iHa/EkftbDzU9F8iFbH+zg==}
 
-  '@epicenterhq/result@0.13.0':
-    resolution: {integrity: sha512-+ztxf1TfqoitqqvgFNwFPfoYQzDww7s1Xz3O1tHqgVh8uOxCuEPrlHgcoXfy+UgAQFUBQQu0wCzORO0CDHUTfw==}
+  '@epicenterhq/result@0.13.1':
+    resolution: {integrity: sha512-Mu5XSISnaZQT6+qhiaMG6fCdyzNvQmxPgbP0cAzEO+J7TmeVXPQKwuopMKxP6kPLQ7WejYoi5Yclxxp1XMLO3Q==}
 
   '@es-joy/jsdoccomment@0.49.0':
     resolution: {integrity: sha512-xjZTSFgECpb9Ohuk5yMX5RhUEbfeQcuOp8IF60e+wyzWEF0M5xeSgqsfLtvPEX8BIyOX9saZqzuGPmZ8oWc+5Q==}
@@ -18836,7 +18836,7 @@ snapshots:
 
   '@emotion/weak-memoize@0.4.0': {}
 
-  '@epicenterhq/result@0.13.0': {}
+  '@epicenterhq/result@0.13.1': {}
 
   '@es-joy/jsdoccomment@0.49.0':
     dependencies:
