@@ -61,6 +61,19 @@ export function createQuery(
   return createBaseQuery(options, QueryObserver, queryClient)
 }
 
+/** Options for createResultQuery */
+export type CreateResultQueryOptions<
+  TQueryFnData = unknown,
+  TError = DefaultError,
+  TData = TQueryFnData,
+  TQueryKey extends QueryKey = QueryKey,
+> = Omit<
+  CreateQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
+  'queryFn'
+> & {
+  queryFn?: QueryFunction<Result<TQueryFnData, TError>, TQueryKey> | SkipToken
+}
+
 export function createResultQuery<
   TQueryFnData = unknown,
   TError = DefaultError,
@@ -68,14 +81,7 @@ export function createResultQuery<
   TQueryKey extends QueryKey = QueryKey,
 >(
   options: Accessor<
-    Omit<
-      CreateQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
-      'queryFn'
-    > & {
-      queryFn?:
-        | QueryFunction<Result<TQueryFnData, TError>, TQueryKey>
-        | SkipToken
-    }
+    CreateResultQueryOptions<TQueryFnData, TError, TData, TQueryKey>
   >,
   queryClient?: Accessor<QueryClient>,
 ) {
