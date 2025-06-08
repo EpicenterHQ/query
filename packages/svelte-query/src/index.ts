@@ -24,6 +24,7 @@ export { infiniteQueryOptions } from './infiniteQueryOptions.js'
 export {
   createMutation,
   createResultMutation,
+  type CreateResultMutationOptions,
 } from './createMutation.svelte.js'
 export { useMutationState } from './useMutationState.svelte.js'
 export { useQueryClient } from './useQueryClient.js'

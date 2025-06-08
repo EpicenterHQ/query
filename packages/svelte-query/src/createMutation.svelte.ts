@@ -78,20 +78,25 @@ export function createMutation<
 
 function noop() {}
 
+export type CreateResultMutationOptions<
+  TData = unknown,
+  TError = DefaultError,
+  TVariables = void,
+  TContext = unknown,
+> = Omit<
+  CreateMutationOptions<TData, TError, TVariables, TContext>,
+  'mutationFn'
+> & {
+  mutationFn?: MutationFunction<Result<TData, TError>, TVariables>
+}
+
 export function createResultMutation<
   TData = unknown,
   TError = DefaultError,
   TVariables = void,
   TContext = unknown,
 >(
-  options: Accessor<
-    Omit<
-      CreateMutationOptions<TData, TError, TVariables, TContext>,
-      'mutationFn'
-    > & {
-      mutationFn?: MutationFunction<Result<TData, TError>, TVariables>
-    }
-  >,
+  options: Accessor<CreateResultMutationOptions<TData, TError, TVariables, TContext>>,
   queryClient?: Accessor<QueryClient>,
 ): CreateMutationResult<TData, TError, TVariables, TContext> {
   return createMutation<TData, TError, TVariables, TContext>(() => {
