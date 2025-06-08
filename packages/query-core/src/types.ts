@@ -460,6 +460,7 @@ export interface InfiniteQueryObserverOptions<
       TError,
       TData,
       InfiniteData<TQueryFnData, TPageParam>,
+      InfiniteData<TQueryFnData, TPageParam>,
       TQueryKey,
       TPageParam
     >,
