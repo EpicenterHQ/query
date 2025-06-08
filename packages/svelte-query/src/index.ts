@@ -7,7 +7,11 @@ export * from '@tanstack/query-core'
 export * from './types.js'
 export * from './context.js'
 
-export { createQuery, createResultQuery } from './createQuery.js'
+export {
+  createQuery,
+  createResultQuery,
+  type CreateResultQueryOptions,
+} from './createQuery.js'
 export type { QueriesResults, QueriesOptions } from './createQueries.svelte.js'
 export type {
   DefinedInitialDataOptions,
