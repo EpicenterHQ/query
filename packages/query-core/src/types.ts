@@ -1100,18 +1100,18 @@ export interface MutationOptions<
     data: TData,
     variables: TVariables,
     context: TContext,
-  ) => MaybePromise<void>
+  ) => MaybePromise<unknown>
   onError?: (
     error: TError,
     variables: TVariables,
     context: TContext | undefined,
-  ) => MaybePromise<void>
+  ) => MaybePromise<unknown>
   onSettled?: (
     data: TData | undefined,
     error: TError | null,
     variables: TVariables,
     context: TContext | undefined,
-  ) => MaybePromise<void>
+  ) => MaybePromise<unknown>
   retry?: RetryValue<TError>
   retryDelay?: RetryDelayValue<TError>
   networkMode?: NetworkMode
