@@ -261,7 +261,7 @@ describe('mutations', () => {
 
     const mutation = queryClient
       .getMutationCache()
-      .create<string, unknown, string, string>(
+      .build<string, unknown, string, string>(
         queryClient,
         {
           mutationKey: key,
@@ -329,7 +329,7 @@ describe('mutations', () => {
   test('addObserver should not add an existing observer', () => {
     const mutationCache = queryClient.getMutationCache()
     const observer = new MutationObserver(queryClient, {})
-    const currentMutation = mutationCache.create(queryClient, {})
+    const currentMutation = mutationCache.build(queryClient, {})
 
     const fn = vi.fn()
 

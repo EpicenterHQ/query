@@ -184,7 +184,7 @@ export function hydrate(
   const queries = (dehydratedState as DehydratedState).queries || []
 
   mutations.forEach(({ state, ...mutationOptions }) => {
-    mutationCache.create(
+    mutationCache.build(
       client,
       {
         ...client.getDefaultOptions().hydrate?.mutations,
@@ -227,7 +227,7 @@ export function hydrate(
         }
       } else {
         // Restore query
-        query = queryCache.ensure(
+        query = queryCache.build(
           client,
           {
             ...client.getDefaultOptions().hydrate?.queries,
